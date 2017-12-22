@@ -9,6 +9,7 @@ import {
 	Text,
 	ViewPropTypes,
 	View,
+	FlatList
 } from 'react-native';
 
 import SwipeRow from './SwipeRow';
@@ -78,23 +79,40 @@ class SwipeListView extends Component {
 		this.props.listViewRef && this.props.listViewRef(ref);
 	}
 
-	renderRow(rowData, secId, rowId, rowMap) {
-		const Component = this.props.renderRow(rowData, secId, rowId, rowMap);
+	renderRow({item,index}){
+	// renderRow(rowData, secId, rowId, rowMap) {
+		// const Component = this.props.renderRow(rowData, secId, rowId, rowMap);
+
+		const Component = this.props.renderRow(item,this._rows[index],index);
 		if (!this.props.renderHiddenRow) {
 			return React.cloneElement(
 				Component,
 				{
 					...Component.props,
-					ref: row => this._rows[`${secId}${rowId}`] = row,
-					onRowOpen: _ => this.onRowOpen(secId, rowId, this._rows),
-					onRowDidOpen: _ => this.props.onRowDidOpen && this.props.onRowDidOpen(secId, rowId, this._rows),
-					onRowClose: _ => this.props.onRowClose && this.props.onRowClose(secId, rowId, this._rows),
-					onRowDidClose: _ => this.props.onRowDidClose && this.props.onRowDidClose(secId, rowId, this._rows),
-					onRowPress: _ => this.onRowPress(`${secId}${rowId}`),
+					ref: row => this._rows[index] = row,
+					onRowOpen: _ => this.onRowOpen(index, this._rows),
+					onRowDidOpen: _ => this.props.onRowDidOpen && this.props.onRowDidOpen(index, this._rows),
+					onRowClose: _ => this.props.onRowClose && this.props.onRowClose(index, this._rows),
+					onRowDidClose: _ => this.props.onRowDidClose && this.props.onRowDidClose(index, this._rows),
+					onRowPress: _ => this.onRowPress(index),
 					setScrollEnabled: enable => this.setScrollEnabled(enable),
-					swipeGestureBegan: _ => this.rowSwipeGestureBegan(`${secId}${rowId}`)
+					swipeGestureBegan: _ => this.rowSwipeGestureBegan(index)
 				}
 			);
+			// return React.cloneElement(
+			// 	Component,
+			// 	{
+			// 		...Component.props,
+			// 		ref: row => this._rows[`${secId}${rowId}`] = row,
+			// 		onRowOpen: _ => this.onRowOpen(secId, rowId, this._rows),
+			// 		onRowDidOpen: _ => this.props.onRowDidOpen && this.props.onRowDidOpen(secId, rowId, this._rows),
+			// 		onRowClose: _ => this.props.onRowClose && this.props.onRowClose(secId, rowId, this._rows),
+			// 		onRowDidClose: _ => this.props.onRowDidClose && this.props.onRowDidClose(secId, rowId, this._rows),
+			// 		onRowPress: _ => this.onRowPress(`${secId}${rowId}`),
+			// 		setScrollEnabled: enable => this.setScrollEnabled(enable),
+			// 		swipeGestureBegan: _ => this.rowSwipeGestureBegan(`${secId}${rowId}`)
+			// 	}
+			// );
 		} else {
 			const previewRowId = this.props.dataSource && this.props.dataSource.getRowIDForFlatIndex(this.props.previewRowIndex || 0);
 			return (
@@ -146,11 +164,16 @@ class SwipeListView extends Component {
 		}
 
 		return (
-			<ListView
+			// <ListView
+				// {...props}
+				// ref={ c => this.setRefs(c) }
+				//onScroll={ e => this.onScroll(e) dsdsdsd}
+				// renderRow={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
+			// />
+			<FlatList
 				{...props}
 				ref={ c => this.setRefs(c) }
-				//onScroll={ e => this.onScroll(e) dsdsdsd}
-				renderRow={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
+				renderItem={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
 			/>
 		)
 	}
