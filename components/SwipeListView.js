@@ -46,13 +46,13 @@ class SwipeListView extends Component {
 		}
 	}
 
-	onRowOpen(secId, rowId, rowMap) {
-		const cellIdentifier = `${secId}${rowId}`;
-		if (this.openCellId && this.openCellId !== cellIdentifier) {
+	onRowOpen(index,rowMap) {
+		// const cellIdentifier = `${secId}${rowId}`;
+		if (this.openCellId && this.openCellId !== index) {
 			this.safeCloseOpenRow();
 		}
-		this.openCellId = cellIdentifier;
-		this.props.onRowOpen && this.props.onRowOpen(secId, rowId, rowMap);
+		this.openCellId = index;
+		this.props.onRowOpen && this.props.onRowOpen(index, rowMap);
 	}
 
 	onRowPress(id) {
@@ -173,7 +173,7 @@ class SwipeListView extends Component {
 			<FlatList
 				{...props}
 				ref={ c => this.setRefs(c) }
-				renderItem={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
+				renderItem={(rowData) => this.renderRow(rowData)}
 			/>
 		)
 	}
