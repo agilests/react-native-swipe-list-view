@@ -48,7 +48,7 @@ class SwipeListView extends Component {
 
 	onRowOpen(index,rowMap) {
 		// const cellIdentifier = `${secId}${rowId}`;
-		if (this.openCellId && this.openCellId !== index) {
+		if (this.openCellId != null && this.openCellId !== index) {
 			this.safeCloseOpenRow();
 		}
 		this.openCellId = index;
@@ -66,12 +66,22 @@ class SwipeListView extends Component {
 
 	onScroll(e) {
 		if (this.openCellId) {
-			if (this.props.closeOnScroll) {
+			// if (this.props.closeOnScroll) {
 				this.safeCloseOpenRow();
 				this.openCellId = null;
-			}
+			// }
 		}
 		this.props.onScroll && this.props.onScroll(e);
+	}
+
+	onRefresh(e) {
+		// if (this.openCellId) {
+			// if (this.props.closeOnScroll) {
+				this.safeCloseOpenRow();
+				this.openCellId = null;
+			// }
+		// }
+		this.props.onRefresh && this.props.onRefresh(e);
 	}
 
 	setRefs(ref) {
@@ -82,7 +92,10 @@ class SwipeListView extends Component {
 	renderRow({item,index}){
 	// renderRow(rowData, secId, rowId, rowMap) {
 		// const Component = this.props.renderRow(rowData, secId, rowId, rowMap);
-
+		// item.name = item.name +'---'+this.props.showAdd
+		// if(this.props.showAdd){
+		// 	this.openCellId=null
+		// }
 		const Component = this.props.renderRow(item,this._rows[index],index);
 		if (!this.props.renderHiddenRow) {
 			return React.cloneElement(
@@ -167,11 +180,13 @@ class SwipeListView extends Component {
 			// <ListView
 				// {...props}
 				// ref={ c => this.setRefs(c) }
-				//onScroll={ e => this.onScroll(e) dsdsdsd}
+				//onScroll={ e => this.onScroll(e)}
 				// renderRow={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
 			// />
 			<FlatList
 				{...props}
+				onRefresh={e => this.onRefresh(e) }
+				onScroll={ e => this.onScroll(e)}
 				ref={ c => this.setRefs(c) }
 				renderItem={(rowData) => this.renderRow(rowData)}
 			/>
