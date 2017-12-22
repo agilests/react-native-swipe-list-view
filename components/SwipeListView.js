@@ -140,7 +140,7 @@ class SwipeListView extends Component {
 			return renderListView(
 				props,
 				this.setRefs.bind(this),
-				this.onScroll.bind(this),
+				//this.onScroll.bind(this),
 				this.renderRow.bind(this, this._rows),
 			);
 		}
@@ -149,7 +149,7 @@ class SwipeListView extends Component {
 			<ListView
 				{...props}
 				ref={ c => this.setRefs(c) }
-				onScroll={ e => this.onScroll(e) }
+				//onScroll={ e => this.onScroll(e) }
 				renderRow={(rowData, secId, rowId) => this.renderRow(rowData, secId, rowId, this._rows)}
 			/>
 		)
